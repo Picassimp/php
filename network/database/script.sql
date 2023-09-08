@@ -8,7 +8,8 @@ create table if not exists users  (
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	email VARCHAR(50) NOT NULL UNIQUE,
 	name VARCHAR(50) NOT NULL,
-	password VARCHAR(50) NOT NULL
+	password VARCHAR(500) NOT NULL,
+	verified BIT DEFAULT 0
 );
 insert into users (id, email, name, password) values (1, 'Pace', 'Smoth', 'psmoth0@amazon.com');
 insert into users (id, email, name, password) values (2, 'Malory', 'Riba', 'mriba1@instagram.com');
@@ -19,7 +20,7 @@ insert into users (id, email, name, password) values (5, 'Clotilda', 'Angel', 'c
 create table if not exists reset_password (
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	token VARCHAR(50) NOT NULL,
-	time DATETIME NOT NULL DEFAULT now(),
+	timeCreated DATETIME NOT NULL DEFAULT now(),
 	email VARCHAR(50) NOT NULL,
 	avaiable BIT DEFAULT 1
 );

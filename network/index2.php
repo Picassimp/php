@@ -1,4 +1,10 @@
 <?php
+    session_start();
+    //kiem tra session
+    if(!isset($_SESSION['email'])){
+        header("Location: login.php");
+        exit();
+    }
   include_once("./database/connection.php");
   $result = $dbConn->query("SELECT id, name, price, quantity, image FROM products");
 ?>
@@ -11,6 +17,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <title>Danh sách sản phẩm</title>
 </head>
 <body style="background-color: #eee;" class="posision-relative">
@@ -18,7 +25,7 @@
     <div class="row justify-content-center mb-3">
         <div class='col-md-12 col-xl-10'>
             <h2>Danh sách sản phẩm</h2>  
-              
+            <a href='logout.php' class='btn btn-primary btn-sm'>Thoát</a>
         </div>
     </div>
     <div class="position-fixed bottom-0 end-0 m-4">
@@ -60,9 +67,9 @@
                             echo "<div class='col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start'>";
                                 echo "
                                 <div class='d-flex flex-column mt-4'>
-                                <a href='#' class='btn btn-primary btn-sm'>Xóa</a>
-                                <a href='#' class='btn btn-outline-primary btn-sm mt-2'>
-                                    Sửa
+                                <a href='edit.php?id=".$row['id']."' class='btn btn-primary btn-sm'>Sửa</a>
+                                <a onclick='confirmDelete(".$row['id'].")' class='btn btn-outline-primary btn-sm mt-2'>
+                                    Xóa
                                 </a>
                                 </div>
                                 ";
@@ -77,4 +84,25 @@
   </div>
 
 </body>
+
+<script>
+    const confirmDelete = (id) =>{
+        swal({
+        title: "Xác nhận xóa?",
+        text: "Xóa xong là cook!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+            window.location.href = "delete.php?id=" +id;
+           
+        } else {
+            
+        }
+        });
+    }
+</script>
+
 </html>

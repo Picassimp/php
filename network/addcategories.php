@@ -1,15 +1,30 @@
 <?php
+session_start();
+//kiem tra session
+if(!isset($_SESSION['email'])){
+    header("Location: login.php");
+    exit();
+}
   include_once("./database/connection.php");
 ?>
 
 <?php
 if (isset($_POST['submit'])) {
+
+    $currentDirectory = getcwd();
+    $uploadDirectory = "/upload/";
+    $fileName = $_FILES['image']['name'];
+    $fileTmpName  = $_FILES['image']['tmp_name'];
+    $uploadPath = $currentDirectory . $uploadDirectory . basename($fileName);
+    // upload file
+    move_uploaded_file($fileTmpName, $uploadPath);
+
     $name = $_POST['name'];
     $image = $_POST['image'];
     // bắt lỗi khi người dùng không nhập đủ thông tin
     // upload file
 
-    $image = "https://www.ludiccreatives.com/images/Logo/ludic_creatives_logo2.png";
+    $image = "http://127.0.0.1:3456/upload/".$fileName;
 
     $sql = "INSERT INTO categories (name, image)
     VALUES ('$name', '$image')";
@@ -31,7 +46,7 @@ if (isset($_POST['submit'])) {
 </head>
 <body style="margin-left: 30px; margin-right: 30px;">
     
-    <form class="row g-3" style="padding: 30px;" id="form" action="addcategories.php" method="post">
+    <form class="row g-3" style="padding: 30px;" id="form" action="addcategories.php" method="post" enctype="multipart/form-data">
     <div class="col-md-16">
         <label for="inputEmail4" class="form-label">Tên</label>
         <input type="text" class="form-control" id="inputEmail4" placeholder="name" name="name">
@@ -43,7 +58,7 @@ if (isset($_POST['submit'])) {
     </div>
     <div class="col-md-12 d-flex justify-content-center">
         <div class="col-md-3">
-            <img src="https://www.ludiccreatives.com/images/Logo/ludic_creatives_logo2.png" class="w-100" alt="">
+            <img id="display" src="https://www.ludiccreatives.com/images/Logo/ludic_creatives_logo2.png" class="w-100" alt="">
         </div>
     </div>
     <div class="col-12 d-flex justify-content-center">
@@ -51,5 +66,16 @@ if (isset($_POST['submit'])) {
             <button type="submit" name="submit" class="btn btn-primary">Add category</button>
     </div>
     </form>
+    <script>
+    const image = document.querySelector('#pic');
+    const display = document.querySelector('#display');
+
+    image.onchange = evt => {
+    const [file] = image.files
+    if (file) {
+        display.src = URL.createObjectURL(file)
+    }
+    }
+</script>
 </body>
 </html>
